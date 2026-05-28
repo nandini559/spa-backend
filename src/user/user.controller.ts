@@ -4,15 +4,25 @@ import {
   Delete,
   Get,
   Param,
-  Post
+  Patch,
+  Post,
+  Req,
+  UseGuards
 } from "@nestjs/common";
 
 import {UserService} from "./user.service";
 import {CreateUserDto} from "./dto/create-user.dto";
+import {AuthGuard} from "@nestjs/passport";
 
 @Controller("users")
 export class UserController {
   constructor(private readonly userService : UserService) {}
+
+  @UseGuards(AuthGuard("jwt"))
+  @Get("profile")
+  getProfile(@Req()req : any) {
+    return {message: "JWT Working Successfully", user: req.user};
+  }
 
   @Post()
   create(@Body()dto : CreateUserDto) {
@@ -32,5 +42,10 @@ export class UserController {
   @Delete(":id")
   remove(@Param("id")id : string) {
     return this.userService.delete(id);
+  }
+
+  @Patch("change-password/:id")
+  changePassword(@Param("id")id : string, @Body()body : any) {
+    return this.userService.changePassword(id, body);
   }
 }

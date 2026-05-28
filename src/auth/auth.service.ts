@@ -1,4 +1,6 @@
-import {BadRequestException, Injectable} from "@nestjs/common";
+import {BadRequestException, Injectable, UnauthorizedException} from "@nestjs/common";
+
+import {JwtService} from "@nestjs/jwt";
 
 import {PrismaService} from "../prisma/prisma.service";
 
@@ -6,23 +8,51 @@ import {LoginDto} from "./dto/login.dto";
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma : PrismaService) {}
+  constructor(private prisma : PrismaService, private jwtService : JwtService) {}
 
   async login(data : LoginDto) {
+    // Find user by userId
     const user = await this.prisma.user.findUnique({
       where: {
         userId: data.userId
       }
     });
 
+    // User not found
     if (!user) {
-      throw new BadRequestException("Invalid User ID");
+      throw new BadRequestException("User ID does not exist");
     }
 
+    // Password mismatch
     if (user.password !== data.password) {
-      throw new BadRequestException("Invalid Password");
+      throw new BadRequestException("Incorrect password");
     }
 
-    return {message: "Login Successful", user};
+    // Role mismatch
+    if (user.role !== data.role) {
+      throw new UnauthorizedException(`This account is registered as ${user.role}. Please select the correct role.`);
+    }
+
+    // JWT Payload
+    const payload = {
+      id: user.id,
+      userId: user.userId,
+      role: user.role
+    };
+
+    // Generate JWT Token
+    const access_token = this.jwtService.sign(payload);
+
+    return {
+      message: "Login Successful",
+
+      access_token,
+
+      user: {
+        id: user.id,
+        userId: user.userId,
+        role: user.role
+      }
+    };
   }
 }

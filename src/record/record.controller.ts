@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Patch,
   Param,
   Post
 } from "@nestjs/common";
@@ -32,5 +33,10 @@ export class RecordController {
   @Delete(":id")
   remove(@Param("id")id : string) {
     return this.recordService.delete(id);
+  }
+
+  @Patch(":id")
+  update(@Param("id")id : string, @Body()data : CreateRecordDto) {
+    return this.recordService.update(id, data);
   }
 }

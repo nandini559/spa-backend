@@ -9,8 +9,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  const config = new DocumentBuilder().setTitle("SPA API").setDescription("SPA Backend").setVersion("1.0").build();
-
+  const config = new DocumentBuilder().setTitle("SPA API").setDescription("SPA Backend APIs").setVersion("1.0").addBearerAuth().build();
   const document = SwaggerModule.createDocument(app, config);
 
   SwaggerModule.setup("api", app, document);

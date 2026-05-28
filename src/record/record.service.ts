@@ -29,4 +29,10 @@ export class RecordService {
         id
       }});
   }
+
+  update(id : string, data : CreateRecordDto) {
+    return this.prisma.record.update({where: {
+        id
+      }, data});
+  }
 }
