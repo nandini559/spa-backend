@@ -5,7 +5,8 @@ import {
   Get,
   Patch,
   Param,
-  Post
+  Post,
+  Req
 } from "@nestjs/common";
 
 import {RecordService} from "./record.service";
@@ -16,8 +17,8 @@ export class RecordController {
   constructor(private readonly recordService : RecordService) {}
 
   @Post()
-  create(@Body()dto : CreateRecordDto) {
-    return this.recordService.create(dto);
+  create(@Body()dto : CreateRecordDto, @Req()req) {
+    return this.recordService.create(dto, req.user.id);
   }
 
   @Get()
