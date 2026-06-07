@@ -6,11 +6,10 @@ import {PrismaService} from "../prisma/prisma.service";
 export class RecordService {
   constructor(private prisma : PrismaService) {}
 
-  create(dto : CreateRecordDto, userId : string) {
+  create(dto : CreateRecordDto) {
     return this.prisma.record.create({
       data: {
-        ...dto,
-        userId: userId
+        ...dto
       }
     });
   }
