@@ -6,18 +6,23 @@ import {
   Patch,
   Param,
   Post,
-  Req
+  Req,
+  UseGuards
 } from "@nestjs/common";
 
 import {RecordService} from "./record.service";
 import {CreateRecordDto} from "./dto/create-record.dto";
+import {AuthGuard} from "@nestjs/passport";
 
 @Controller("records")
 export class RecordController {
   constructor(private readonly recordService : RecordService) {}
 
   @Post()
+  @UseGuards(AuthGuard("jwt"))
   create(@Body()dto : CreateRecordDto, @Req()req) {
+    console.log(req.headers.authorization);
+    console.log(req.user);
     return this.recordService.create(dto, req.user.id);
   }
 
