@@ -5,11 +5,11 @@ import {Role} from "@prisma/client";
 export class CreateUserDto {
   @ApiProperty({example: "user@example.com"})
   @IsEmail()
-  userId: string;
+  user_email: string;
 
   @ApiProperty()
   @IsString()
-  username: string;
+  name: string;
 
   @ApiProperty()
   @MinLength(6)

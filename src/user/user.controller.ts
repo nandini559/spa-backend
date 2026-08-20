@@ -13,23 +13,27 @@ import {
 import {UserService} from "./user.service";
 import {CreateUserDto} from "./dto/create-user.dto";
 import {AuthGuard} from "@nestjs/passport";
+import {RolesGuard} from "../auth/roles.guard";
+import {Roles} from "../auth/roles.decorator";
 
 @Controller("users")
 export class UserController {
   constructor(private readonly userService : UserService) {}
 
-  @UseGuards(AuthGuard("jwt"))
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Get("profile")
   getProfile(@Req()req : any) {
     return {message: "JWT Working Successfully", user: req.user};
   }
 
   @Post()
+  @Roles("ADMIN")
   create(@Body()dto : CreateUserDto) {
     return this.userService.create(dto);
   }
 
   @Get()
+  @Roles("ADMIN")
   findAll() {
     return this.userService.findAll();
   }
@@ -50,6 +54,7 @@ export class UserController {
   }
 
   @Patch(":id")
+  @Roles("ADMIN")
   updateUser(@Param("id")id : string, @Body()data : CreateUserDto) {
     return this.userService.update(id, data);
   }

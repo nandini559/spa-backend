@@ -1,28 +1,34 @@
 import {
   Body,
-  Controller,
   Delete,
-  Get,
   Patch,
   Param,
-  Post
+  Post,
+  Req,
+  UseGuards
 } from "@nestjs/common";
-
+import {Controller, Get, Request} from "@nestjs/common";
 import {RecordService} from "./record.service";
 import {CreateRecordDto} from "./dto/create-record.dto";
+import {AuthGuard} from "@nestjs/passport";
+import {ApiBearerAuth} from "@nestjs/swagger";
 
+@ApiBearerAuth()
 @Controller("records")
 export class RecordController {
   constructor(private readonly recordService : RecordService) {}
 
   @Post()
+  @UseGuards(AuthGuard("jwt"))
   create(@Body()dto : CreateRecordDto) {
+    console.log("CREATE DTO:", dto);
     return this.recordService.create(dto);
   }
-
+  @UseGuards(AuthGuard("jwt"))
   @Get()
-  findAll() {
-    return this.recordService.findAll();
+  findAll(@Req()req : any) {
+    console.log("JWT User:", req.user);
+    return this.recordService.findAll(req.user);
   }
 
   @Get(":id")

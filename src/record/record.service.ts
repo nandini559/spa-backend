@@ -14,14 +14,30 @@ export class RecordService {
     });
   }
 
-  findAll() {
+  findAll(user : any) {
+    console.log("Logged in user:", user);
+
+    if (user.role === "ADMIN") {
+      console.log("Fetching all records because user is ADMIN");
+
+      return this.prisma.record.findMany({
+        include: {
+          user: true
+        }
+      });
+    }
+
+    console.log("Fetching records for user ID:", user.id);
+
     return this.prisma.record.findMany({
+      where: {
+        userId: user.id
+      },
       include: {
         user: true
       }
     });
   }
-
   findOne(id : string) {
     return this.prisma.record.findUnique({where: {
         id

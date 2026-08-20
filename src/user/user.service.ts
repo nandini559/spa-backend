@@ -13,16 +13,14 @@ export class UserService {
       where: {
         OR: [
           {
-            userId: data.userId
-          }, {
-            username: data.username
+            user_email: data.user_email
           }
         ]
       }
     });
 
     if (existingUser) {
-      throw new ConflictException("User ID or Username already exists");
+      throw new ConflictException("User ID or Email already exists");
     }
 
     return this.prisma.user.create({data});

@@ -5,11 +5,11 @@ import {IsEnum, IsString} from "class-validator";
 export class LoginDto {
   @ApiProperty()
   @IsString()
-  userId: string;
+  user_email: string;
 
   @ApiProperty()
   @IsString()
-  username: string;
+  name: string;
 
   @ApiProperty()
   @IsString()

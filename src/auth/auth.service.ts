@@ -14,7 +14,7 @@ export class AuthService {
     // Find user by userId
     const user = await this.prisma.user.findUnique({
       where: {
-        userId: data.userId
+        user_email: data.user_email
       }
     });
 
@@ -36,7 +36,7 @@ export class AuthService {
     // JWT Payload
     const payload = {
       id: user.id,
-      userId: user.userId,
+      user_email: user.user_email,
       role: user.role
     };
 
@@ -50,7 +50,8 @@ export class AuthService {
 
       user: {
         id: user.id,
-        userId: user.userId,
+        user_email: user.user_email,
+        name: user.name,
         role: user.role
       }
     };

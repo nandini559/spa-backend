@@ -14,8 +14,8 @@ enum Role {
 
 model User {
   id       String @id @default(uuid())
-  userId   String @unique
-  username   String @unique
+  user_email   String @unique
+  name   String @unique
   password String
   role     Role   @default(USER)
 
@@ -34,5 +34,5 @@ model Record {
 
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
